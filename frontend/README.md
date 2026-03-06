@@ -1,70 +1,292 @@
-# Getting Started with Create React App
+# Task Tracker Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is the **frontend application** for the User Management & Task Tracker system.
+It is built using **React** and connects to the backend API to allow users to register, log in, and manage their tasks through a simple user interface.
 
-## Available Scripts
+The goal of this frontend was to demonstrate **UI development, API integration, authentication handling, and basic testing** as part of the hiring assignment.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+# Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Frontend technologies used in this project:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* React
+* React Router
+* Axios
+* CSS
+* Jest + React Testing Library
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Features
 
-### `npm run build`
+## Authentication Screens
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The frontend provides two main authentication pages.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Register Page
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Users can create an account by providing:
 
-### `npm run eject`
+* Email
+* Password
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+The form validates inputs and sends a request to the backend:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+POST /auth/register
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+If the registration is successful, the user is redirected to the login page.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+### Login Page
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Users can log in using their credentials.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+The login form sends a request to:
 
-### Code Splitting
+POST /auth/login
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+If authentication succeeds:
 
-### Analyzing the Bundle Size
+* A **JWT token** is returned from the backend
+* The token is stored in **localStorage**
+* The user is redirected to the dashboard
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+# Dashboard
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+After logging in, the user is redirected to the **dashboard**.
 
-### Advanced Configuration
+The dashboard displays:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* Task creation form
+* List of tasks
+* Task status
+* Buttons to update or delete tasks
+* Logout option
 
-### Deployment
+The dashboard communicates with the backend using authenticated API requests.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+# Task Management
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Users can manage their tasks directly from the dashboard.
+
+### Create Task
+
+Users can create a task with:
+
+* Title
+* Description
+
+Request sent:
+
+POST /tasks
+
+---
+
+### View Tasks
+
+All tasks for the logged-in user are fetched from:
+
+GET /tasks
+
+The dashboard displays them in a simple task list.
+
+---
+
+### Update Task Status
+
+Users can toggle the task status between:
+
+* pending
+* completed
+
+Request sent:
+
+PUT /tasks/:id
+
+---
+
+### Delete Task
+
+Users can remove tasks from the system.
+
+Request sent:
+
+DELETE /tasks/:id
+
+---
+
+# API Integration
+
+All frontend API calls are handled using **Axios**.
+
+A custom API instance is created to define the backend base URL and automatically attach the JWT token.
+
+Example configuration:
+
+* Base URL stored in environment variables
+* Authorization header added automatically
+* Token read from localStorage
+
+Example header sent to backend:
+
+Authorization: Bearer TOKEN
+
+This ensures protected backend routes can be accessed.
+
+---
+
+# Protected Routes
+
+The frontend checks if a JWT token exists in localStorage.
+
+If the token is missing:
+
+* The user is redirected to the login page
+
+This prevents unauthorized access to the dashboard.
+
+---
+
+# Logout
+
+The dashboard includes a logout button.
+
+When clicked:
+
+* The JWT token is removed from localStorage
+* The user is redirected to the login page
+
+---
+
+# Project Structure
+
+frontend
+│
+├── src
+│   ├── pages
+│   │   ├── Login.js
+│   │   ├── Register.js
+│   │   └── Dashboard.js
+│   │
+│   ├── services
+│   │   └── api.js
+│   │
+│   ├── tests
+│   │   ├── Login.test.js
+│   │   └── Dashboard.test.js
+│   │
+│   ├── App.js
+│   ├── index.js
+│   └── index.css
+│
+├── package.json
+├── .env.example
+└── README.md
+
+---
+
+# Setup Instructions
+
+### 1. Clone the repository
+
+git clone <repository-url>
+cd frontend
+
+---
+
+### 2. Install dependencies
+
+npm install
+
+---
+
+### 3. Configure environment variables
+
+Create a `.env` file in the root directory.
+
+Example:
+
+REACT_APP_API_URL=http://localhost:5000
+
+This is the backend API URL.
+
+---
+
+### 4. Start the development server
+
+npm start
+
+The application will run at:
+
+http://localhost:3000
+
+---
+
+# Running Tests
+
+The frontend includes basic component tests.
+
+Run tests with:
+
+npm test
+
+Tests cover:
+
+* Login component rendering
+* Dashboard component rendering
+
+---
+
+# UI Design
+
+The interface was designed to be:
+
+* Simple
+* Clean
+* Responsive
+* Easy to use
+
+Basic CSS styling is used for layout, form inputs, buttons, and task cards.
+
+---
+
+# Error Handling
+
+The frontend handles API errors and displays appropriate messages.
+
+Examples include:
+
+* Login failed
+* Registration failed
+* Unauthorized access
+* Task operation failures
+
+Backend error messages are shown to the user when available.
+
+---
+
+# Possible Improvements
+
+Some improvements that could be added in the future:
+
+* Better UI styling using a component library
+* Improved form validation
+* Pagination for large task lists
+* Global state management
+* Loading indicators
+* Better error UI components
+
+---
+
+# Author
+
+Rakesh Reddy
+B.Sc Computer Science Student
+Interested in Backend Development and Full Stack Development
